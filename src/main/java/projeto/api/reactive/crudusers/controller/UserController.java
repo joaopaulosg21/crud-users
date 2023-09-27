@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import projeto.api.reactive.crudusers.dto.UpdateUserDTO;
 import projeto.api.reactive.crudusers.model.User;
 import projeto.api.reactive.crudusers.service.UserService;
 import reactor.core.publisher.Flux;
@@ -12,7 +13,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/api/users/")
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -31,5 +32,10 @@ public class UserController {
     @GetMapping("{id}")
     public ResponseEntity<Mono<User>> findById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.findById(id));
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<Mono<User>> update(@PathVariable Long id, @RequestBody UpdateUserDTO user) {
+        return ResponseEntity.ok(userService.update(user,id));
     }
 }

@@ -2,6 +2,7 @@ package projeto.api.reactive.crudusers.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import projeto.api.reactive.crudusers.dto.UpdateUserDTO;
 import projeto.api.reactive.crudusers.exceptions.EmailAlreadyInUseException;
 import projeto.api.reactive.crudusers.exceptions.UserNotFoundException;
 import projeto.api.reactive.crudusers.model.User;
@@ -44,6 +45,15 @@ public class UserService {
                         return Mono.error(UserNotFoundException::new);
                     }
                     return Mono.just(user);
+                });
+    }
+
+    public Mono<User> update(UpdateUserDTO updateUser, Long id) {
+        return this.findById(id)
+                .flatMap(user -> {
+                    user.setName(updateUser.name());
+                    user.setAge(updateUser.age());
+                    return userRepository.save(user);
                 });
     }
 }
