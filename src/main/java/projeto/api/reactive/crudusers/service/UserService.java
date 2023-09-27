@@ -2,6 +2,7 @@ package projeto.api.reactive.crudusers.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import projeto.api.reactive.crudusers.dto.ResponseDTO;
 import projeto.api.reactive.crudusers.dto.UpdateUserDTO;
 import projeto.api.reactive.crudusers.exceptions.EmailAlreadyInUseException;
 import projeto.api.reactive.crudusers.exceptions.UserNotFoundException;
@@ -55,5 +56,11 @@ public class UserService {
                     user.setAge(updateUser.age());
                     return userRepository.save(user);
                 });
+    }
+
+    public Mono<ResponseDTO> delete(Long id) {
+        return this.findById(id)
+                .then(userRepository.deleteById(id))
+                .then(Mono.just(new ResponseDTO(String.format("User with id: %d, deleted",id))));
     }
 }

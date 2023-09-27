@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import projeto.api.reactive.crudusers.dto.ResponseDTO;
 import projeto.api.reactive.crudusers.dto.UpdateUserDTO;
 import projeto.api.reactive.crudusers.model.User;
 import projeto.api.reactive.crudusers.service.UserService;
@@ -37,5 +38,10 @@ public class UserController {
     @PatchMapping("{id}")
     public ResponseEntity<Mono<User>> update(@PathVariable Long id, @RequestBody UpdateUserDTO user) {
         return ResponseEntity.ok(userService.update(user,id));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Mono<ResponseDTO>> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.delete(id));
     }
 }
