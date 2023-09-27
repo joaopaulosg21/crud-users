@@ -27,4 +27,9 @@ public class UserController {
     public ResponseEntity<Flux<User>> findAll() {
         return ResponseEntity.ok(userService.findAll());
     }
+
+    @GetMapping("{id}")
+    public ResponseEntity<Mono<User>> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findById(id));
+    }
 }

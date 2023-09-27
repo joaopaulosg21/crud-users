@@ -3,11 +3,13 @@ package projeto.api.reactive.crudusers.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import projeto.api.reactive.crudusers.exceptions.EmailAlreadyInUseException;
+import projeto.api.reactive.crudusers.exceptions.UserNotFoundException;
 import projeto.api.reactive.crudusers.model.User;
 import projeto.api.reactive.crudusers.repository.UserRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -21,7 +23,6 @@ public class UserService {
 
     public Mono<User> create(User user) {
         return userRepository.findByEmail(user.getEmail())
-                .map(User::new)
                 .defaultIfEmpty(new User())
                 .flatMap(item -> {
                     if(user.getEmail().equals(item.getEmail())) {
@@ -33,5 +34,16 @@ public class UserService {
 
     public Flux<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public Mono<User> findById(Long id) {
+        return userRepository.findById(id)
+                .defaultIfEmpty(new User())
+                .flatMap(user -> {
+                    if(Objects.isNull(user.getEmail())) {
+                        return Mono.error(UserNotFoundException::new);
+                    }
+                    return Mono.just(user);
+                });
     }
 }
