@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import projeto.api.reactive.crudusers.exceptions.EmailAlreadyInUseException;
 import projeto.api.reactive.crudusers.model.User;
 import projeto.api.reactive.crudusers.repository.UserRepository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
@@ -28,5 +29,9 @@ public class UserService {
                     }
                     return userRepository.save(user);
                 });
+    }
+
+    public Flux<User> findAll() {
+        return userRepository.findAll();
     }
 }
